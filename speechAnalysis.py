@@ -54,7 +54,26 @@ def readPace(s):
         i += 1
     
     return pace
-    # The returned object is a list of tuples with the first two elements the start and end times of the instance respectively. The nest two elements label the segment of sound as either a silence, which is sounding or silent, or a syllable, and its count.
+    # The returned object is a list of tuples with the first two elements the start and end times of the instance respectively. The next two elements label the segment of sound as either a silence, which is sounding or silent, or a syllable, and its count.
+
+# Reads a comma separated file (.Table extension generally) of table of phone data from praat. In order to get this the syllable nuclei (i've only used v2) praat script is required. Open this praat script from praat and run it (only the '/directory' field need be changed to the folder where your sound files are placed, I didn't require tweaking any parameters). A TextGrid object is obtained. Use the 'Down to Table...' utility to convert it to a Table object. Save the Table object as a comma separated file. 
+def readFormants(s):
+    
+    f = open(s, 'r')
+    frm = f.read().split('\n')
+    frm.pop(0)
+    f.close()
+    
+    form = []
+    i = 0
+    while i < len(frm) - 1:
+        s = frm[i].split(',')
+        s[2 * (int(s[1]) + 1):12] = [-1] * (10 - 2 * int(s[1]))
+        form.append((float(s[0]), (float(s[2]), float(s[3])), (float(s[4]), float(s[5])), (float(s[6]), float(s[7])), (float(s[8]), float(s[9])), (float(s[10]), float(s[11]))))
+        i += 1
+    
+    return form
+    # The returned object is a list of tuples with the first element the start time. The next five elements are 2-tuples of formant freq and bandwidth.It contains value -1 if the bandwidth doesn't exist.
 
 if __name__ == "__main__":
     print "Sorry, main functionalities not yet provided :<"
